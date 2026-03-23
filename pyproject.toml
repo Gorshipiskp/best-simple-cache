@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "best-simple-caching"
+version = "1.0.0"
+description = "Asynchronous caching library with per-key locking, TTL, LRU and decorators"
+readme = "README.md"
+authors = [
+    { name = "Gorshipisk", email = "bestdevelopment.work@gmail.com" },
+]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Gorshipiskp/best-simple-cache"
