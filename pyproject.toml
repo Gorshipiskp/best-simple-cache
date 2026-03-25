@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "best-simple-caching"
-version = "1.0.0"
+version = "1.0.1"
 description = "Asynchronous caching library with per-key locking, TTL, LRU and decorators"
 readme = "README.md"
 authors = [
