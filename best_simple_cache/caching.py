@@ -1,8 +1,7 @@
 import functools
 from typing import Generic, Any, Callable, Awaitable, Coroutine, ParamSpec
 
-from . import EntityCache
-from .entity_cache import PK, T
+from .entity_cache import PK, T, EntityCache
 from .misc import handle_maybe_async
 
 P = ParamSpec("P")

@@ -5,9 +5,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
-from . import EntityCache
 from .caching import CacheDecorator
-from .entity_cache import CachingConfig
+from .entity_cache import CachingConfig, EntityCache
 
 
 async def main():
@@ -75,6 +74,7 @@ async def main():
 
     print(f"After caching: {end - start:.6f}")
 
+    print("Sleep for TTL's expire")
     await asyncio.sleep(3.1)
 
     start: float = time.perf_counter()
