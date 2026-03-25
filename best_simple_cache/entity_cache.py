@@ -72,7 +72,9 @@ class EntityCache(ABC, Generic[T, PK]):
         return await self._get(pk)
 
     async def get(self, **kwargs: Any) -> T | None:
-        return await self._get(self.make_pk(**kwargs))
+        return await self._get(
+            self.make_pk(**kwargs)
+        )
 
     async def _get(self, entity_pk: PK) -> T | None:
         if self._config.disabled:

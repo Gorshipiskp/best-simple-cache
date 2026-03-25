@@ -12,6 +12,10 @@ class CacheDecorator(Generic[T, PK]):
     def __init__(self, entity_cache: EntityCache[T, PK]) -> None:
         self._entity_cache: EntityCache[T, PK] = entity_cache
 
+        self.get: Callable[..., Coroutine[Any, Any, T | None]] = self._entity_cache.get
+        self.set: Callable[..., Coroutine[Any, Any, None]] = self._entity_cache.set
+        self.invalidate: Callable[..., Coroutine[Any, Any, None]] = self._entity_cache.invalidate
+
         self.cache = self.__cache()
         self.invalidate_after = self.__invalidate_after()
 
@@ -26,14 +30,14 @@ class CacheDecorator(Generic[T, PK]):
 
             @functools.wraps(func)
             async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
-                from_cache: T | None = await self._entity_cache.get(**kwargs)
+                from_cache: T | None = await self.get(**kwargs)
 
                 if from_cache is not None:
                     return from_cache
 
                 result: T = await handle_maybe_async(func, *args, **kwargs)
 
-                await self._entity_cache.set(entity=result, **kwargs)
+                await self.set(entity=result, **kwargs)
 
                 return result
 
@@ -49,7 +53,7 @@ class CacheDecorator(Generic[T, PK]):
             async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
                 result: T = await handle_maybe_async(func, *args, **kwargs)
 
-                await self._entity_cache.invalidate(**kwargs)
+                await self.invalidate(**kwargs)
 
                 return result
 
@@ -66,11 +70,11 @@ class CacheDecorator(Generic[T, PK]):
             async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
                 result: T = await handle_maybe_async(func, *args, **kwargs)
 
-                await self._entity_cache.invalidate(**kwargs)
+                await self.invalidate(**kwargs)
 
                 refresh_res: T = await handle_maybe_async(refresh_func, *args, **kwargs)
                 if getattr(func, "is_cached", False):
-                    await self._entity_cache.set(entity=refresh_res, **kwargs)
+                    await self.set(entity=refresh_res, **kwargs)
 
                 return result
 
