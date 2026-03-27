@@ -54,9 +54,6 @@ class EntityCache(ABC, Generic[T, PK]):
         if self._config.disabled:
             return
 
-        if not isinstance(entity, self.model):
-            raise TypeError(f"Expected {self.model}, got {type(entity)}")
-
         entity_pk: PK = self.make_pk(**kwargs)
 
         async with self._pool_locks.setdefault(entity_pk, Lock()):

@@ -25,7 +25,10 @@ class CacheDecorator(Generic[T, PK]):
         def decorator(
                 func: Callable[P, T | Awaitable[T] | Coroutine[Any, Any, T]]
         ) -> Callable[P, Coroutine[Any, Any, T]]:
-            func.is_cached = True
+            if getattr(func, "is_cached", False):
+                return func
+            else:
+                func.is_cached = True
 
             @functools.wraps(func)
             async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
@@ -72,8 +75,7 @@ class CacheDecorator(Generic[T, PK]):
                 await self.invalidate(**kwargs)
 
                 refresh_res: T = await handle_maybe_async(refresh_func, *args, **kwargs)
-                if getattr(func, "is_cached", False):
-                    await self.set(entity=refresh_res, **kwargs)
+                await self.set(entity=refresh_res, **kwargs)
 
                 return result
 
